@@ -25,7 +25,7 @@ router.get("/fetchallnotes", fetchuser, async (req, res) => {
 //endpoint /api/auth/addnote
 //login required
 //Route 2
-router.get(
+router.post(
   "/addnote",
   fetchuser,
   [
