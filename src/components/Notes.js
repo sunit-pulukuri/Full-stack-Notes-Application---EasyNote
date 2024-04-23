@@ -3,29 +3,32 @@ import { useContext, useEffect, useRef, useState } from "react";
 import NoteItem from "./NoteItem";
 import NoteContext from "../context/notes/NoteContext";
 import AddNote from "./AddNote";
+// import editNote from "../context/notes/NoteState";
 const Notes = () => {
   const context = useContext(NoteContext);
-  const { notes, getNotes } = context;
+  const { notes, getNotes, editNote } = context;
   useEffect(() => {
     getNotes();
   }, []);
   const ref = useRef(null);
+  const refClose = useRef(null);
   const updateNote = (currentNote) => {
     ref.current.click();
     setNote({
+      id: currentNote._id, 
       etitle: currentNote.title,
       edescription: currentNote.description,
       etag: currentNote.tag,
     });
   };
-  const [note, setNote] = useState({ etitle: "", edescription: "", etag: "" });
+  const [note, setNote] = useState({id:"", etitle: "", edescription: "", etag: "" });
   const handleClick = (e) => {
-    console.log("Updating the note", note);
-    e.preventDefault();
+    editNote(note.id, note.etitle, note.edescription,note.etag)
+    refClose.current.click();
   };
 
   const onChange = (e) => {
-    setNote({ ...note, [e.target.name]: e.target.value });
+    setNote({...note, [e.target.name]: e.target.value });
   };
 
   return (
@@ -112,6 +115,7 @@ const Notes = () => {
             </div>
             <div className="modal-footer">
               <button
+              ref = {refClose}
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
@@ -131,6 +135,9 @@ const Notes = () => {
       </div>
       <div className="row my-3">
         <h2>Your Notes</h2>
+        <div className="container">
+          {notes.length===0 && "No notes to display"}
+        </div>
         {notes.map((note) => {
           return (
             <NoteItem key={note._id} updateNote={updateNote} note={note} />
