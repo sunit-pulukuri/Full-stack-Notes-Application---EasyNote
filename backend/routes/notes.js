@@ -1,7 +1,7 @@
 const express = require("express");
 const fetchuser = require("../Middleware/fetchuser");
 const router = express.Router();
-const Note = require("../models/Notes");
+const Note = require("../models/Note");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const { body, validationResult } = require("express-validator");
@@ -15,6 +15,7 @@ router.get("/fetchallnotes", fetchuser, async (req, res) => {
   try {
     const notes = await Note.find({ user: req.user.id });
     res.json(notes);
+    console.log("fetchallnotes is working fine");
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal server error :(");

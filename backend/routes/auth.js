@@ -28,14 +28,12 @@ router.post(
     }
     try {
       let user = await User.findOne({ email: req.body.email });
-      console.log(user);
+      // console.log(user);
       if (user) {
-        return res
-          .status(400)
-          .json({
-            success,
-            error: "A user with the same Email already exists!",
-          });
+        return res.status(400).json({
+          success,
+          error: "A user with the same Email already exists!",
+        });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -95,13 +93,13 @@ router.post(
           .json({ success, error: "Login with the right credentials" });
       }
 
-      const payload = {
+      const data = {
         user: {
           id: user.id,
         },
       };
 
-      const authToken = jwt.sign(payload, JWT_SECRET);
+      const authToken = jwt.sign(data, JWT_SECRET);
 
       success = true;
       res.json({ success, authToken: authToken });

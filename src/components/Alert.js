@@ -1,13 +1,28 @@
 import React from "react";
 
-const Alert = (props) => {
+export default function Alert(props) {
+  const capitalize = (word) => {
+    if (word === "danger") {
+      word = "error";
+    }
+    const lower = word.toLowerCase();
+    return lower.charAt(0).toUpperCase() + lower.slice(1);
+  };
   return (
-    <div>
-      <div className="alert alert-primary" role="alert">
-        {props.message}
+    props.alerts && (
+      <div
+        className={`alert alert-${props.alerts.type} alert-dismissible fade show`}
+        role="alert"
+      >
+        <strong>{capitalize(props.alerts.type)}</strong>:{" "}
+        {capitalize(props.alerts.msg)}
+        <button
+          type="button"
+          className="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
       </div>
-    </div>
+    )
   );
-};
-
-export default Alert;
+}

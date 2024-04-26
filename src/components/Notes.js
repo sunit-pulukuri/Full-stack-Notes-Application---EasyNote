@@ -3,37 +3,50 @@ import { useContext, useEffect, useRef, useState } from "react";
 import NoteItem from "./NoteItem";
 import NoteContext from "../context/notes/NoteContext";
 import AddNote from "./AddNote";
+import { useNavigate } from "react-router-dom";
 // import editNote from "../context/notes/NoteState";
-const Notes = () => {
+const Notes = (props) => {
   const context = useContext(NoteContext);
   const { notes, getNotes, editNote } = context;
+  const his = useNavigate();
   useEffect(() => {
-    getNotes();
+    if (localStorage.getItem("token")) {
+      getNotes();
+    } else {
+      his("/login");
+    }
   }, []);
   const ref = useRef(null);
   const refClose = useRef(null);
   const updateNote = (currentNote) => {
     ref.current.click();
     setNote({
-      id: currentNote._id, 
+      id: currentNote._id,
       etitle: currentNote.title,
       edescription: currentNote.description,
       etag: currentNote.tag,
     });
+    // props.showAlert("Updated Successfully","success")
   };
-  const [note, setNote] = useState({id:"", etitle: "", edescription: "", etag: "" });
+  const [note, setNote] = useState({
+    id: "",
+    etitle: "",
+    edescription: "",
+    etag: "",
+  });
   const handleClick = (e) => {
-    editNote(note.id, note.etitle, note.edescription,note.etag)
+    editNote(note.id, note.etitle, note.edescription, note.etag);
     refClose.current.click();
+    props.showAlert("Updated Successfully", "success");
   };
 
   const onChange = (e) => {
-    setNote({...note, [e.target.name]: e.target.value });
+    setNote({ ...note, [e.target.name]: e.target.value });
   };
 
   return (
     <>
-      <AddNote />
+      <AddNote showAlert={props.showAlert} />
       <button
         type="button"
         className="btn btn-primary d-none"
@@ -115,7 +128,7 @@ const Notes = () => {
             </div>
             <div className="modal-footer">
               <button
-              ref = {refClose}
+                ref={refClose}
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
@@ -136,11 +149,16 @@ const Notes = () => {
       <div className="row my-3">
         <h2>Your Notes</h2>
         <div className="container">
-          {notes.length===0 && "No notes to display"}
+          {notes.length === 0 && "No notes to display"}
         </div>
         {notes.map((note) => {
           return (
-            <NoteItem key={note._id} updateNote={updateNote} note={note} />
+            <NoteItem
+              key={note._id}
+              updateNote={updateNote}
+              note={note}
+              showAlert={props.showAlert}
+            />
           );
         })}
       </div>

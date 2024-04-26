@@ -18,6 +18,7 @@ const NoteItem = (props) => {
               className="fa-sharp fa-solid fa-trash mx-2"
               onClick={() => {
                 deleteNote(note._id);
+                props.showAlert("Deleted successfully", "success");
               }}
             ></i>
             {/* <i className="fa-solid fa-copy"></i> */}
@@ -25,6 +26,7 @@ const NoteItem = (props) => {
               className="fa-sharp fa-regular fa-pen-to-square mx-2"
               onClick={() => {
                 updateNote(note);
+                props.showAlert("Updated successfully", "success");
               }}
             ></i>
           </div>
